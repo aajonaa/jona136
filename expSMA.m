@@ -79,7 +79,7 @@ Markers          = repmat(basic_Markers,ceil(nLines/numel(basic_Markers)),1);
 %  'F107','F108','F109','F110','F111','F112','F113','F114','F115','F116','F117','F118','F119','F120','F121','F122','F123','F124','F125','F126','F127','F128','F129','F130','F131','F132','F133','F134','F135','F136'};
 % Function_name_all={'F107','F108','F113','F115','F129','F130','F131','F132','F133','F134','F135','F136'};
 
-Function_name_all={'F107','F109','F110','F111','F112','F113','F114','F115','F116','F117','F118','F119','F120','F121','F122','F123','F124','F125','F126','F129','F130','F131','F132','F133','F134','F135','F136'};
+Function_name_all={'F107','F108', 'F109','F110','F111','F112','F113','F114','F115','F116','F117','F118','F119','F120','F121','F122','F123','F124','F125','F126', 'F127', 'F128', 'F129','F130','F131','F132','F133','F134','F135','F136'};
 % From F1 to F20
 % Function_name_all={'F107','F108','F109','F110','F111','F112','F113','F114','F115','F116','F117','F118','F119','F120','F121','F122','F123','F124','F125','F126'};
 % Function_name_all={'F111','F112','F113','F114','F115'};
@@ -146,7 +146,7 @@ for funcNum=1:size(Function_name_all,2)
     startLineNum=startLineNum+algrithmNum;
     %% plot cg_curveline
     clf
-    set(gcf,'Position',[0,0,1000,600])
+    set(gcf,'Position',[0,100,1000,600])
     
     for it=1:algrithmNum
         yy(it,:)=mean(all_curves((it-1)*Flod+1:(it-1)*Flod+Flod,:));
@@ -201,6 +201,7 @@ for funcNum=1:size(Function_name_all,2)
     saveas(gcf,[filename,'-',Function_name,'-carve'],'fig')
     filename1= [filename,'-',Function_name,'-carve'];
     print(filename1,'-dtiff', '-r300'); %<-Save as PNG with 300 DPI
+    print(filename1, '-dpdf', '-r600');
 end
 
 %     Orderhao(xlsfilename);
