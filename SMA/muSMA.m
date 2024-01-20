@@ -58,9 +58,9 @@ while  FEs <= Max_FEs
 %     end
 %     history_X = history_X(randperm(N), :);
 
-    % if rand < rand
-    %     history_X = X;
-    % else
+    if rand < rand
+        history_X = X;
+    else
         for i = 1:N
             if SmellIndex(i) <= N/2
                 history_X(SmellIndex(i), :) = X(SmellIndex(i), :);
@@ -68,7 +68,7 @@ while  FEs <= Max_FEs
                 history_X(SmellIndex(i), :) = (ub-lb)*rand+lb;
             end
         end
-    % end
+    end
     history_X = history_X(randperm(N), :);
     F = get_scale_factor;
     for i = 1:N/2
