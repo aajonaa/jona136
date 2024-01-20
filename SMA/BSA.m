@@ -13,13 +13,14 @@ disp(fobj);
 tic
 
 %INITIALIZATION
-DIM_RATE = 1;  %此变量的取值在原文中并没有给出
-Convergence_curve=[];
+DIM_RATE = 1;  
+Convergence_curve = [];
 FEs = 0;
 bestFitness = inf;
 best_pos = zeros(1,dim);
 iter = 1;
-AllFitness = inf * ones(N, 1);
+AllFitness = inf * ones(1, N);
+fitnessoffsprings = inf * ones(1, N);
 if numel(lb)==1, lb=lb*ones(1,dim); ub=ub*ones(1,dim); end
 X=initialization(N,dim,ub,lb); % see Eq.1 in [1]
 for i = 1 : N
@@ -39,7 +40,7 @@ while FEs < Max_FEs
     if rand<rand, historical_X=X; end  % see Eq.3 in [1] redefine oldP at the beginning of each iteration
     historical_X=historical_X(randperm(N),:); % see Eq.4 in [1] randomly change the order of the individuals in oldP
     F=get_scale_factor; % see Eq.5 in [1], you can define other F generation strategies 
-    map=zeros(N,dim); % see Algorithm-2 in [1]  我看论文中这里是定义的全为1的矩阵呢？       
+    map=zeros(N,dim); % see Algorithm-2 in [1]  
     if rand<rand
         for i=1:N,  u=randperm(dim); map(i,u(1:ceil(DIM_RATE*rand*dim)))=1; end
     else
@@ -47,21 +48,19 @@ while FEs < Max_FEs
     end
 
     % RECOMBINATION (MUTATION+CROSSOVER)   
+    disp(map);
     offsprings=X+(map.*F).*(historical_X-X);   % see Eq.5 in [1]  
-    %原文中不是X+F*(historical_X-X)吗？对，但这里将变异与交叉合并在一起了，  
     offsprings=BoundaryControl(offsprings,lb,ub); % see Algorithm-3 in [1]
 
     % SELECTON-II
     for i = 1:N
-        fitnessoffsprings(i) = feval(fobj,offsprings(i,:));
+        fitnessoffsprings(i) = fobj(offsprings(i,:));
         FEs = FEs + 1;
         if fitnessoffsprings(i) < bestFitness
             bestFitness = fitnessoffsprings(i);
             best_pos = offsprings(i,:);
         end
     end
-    fitnessoffsprings = reshape(fitnessoffsprings, [1, N]);
-    AllFitness = reshape(AllFitness, [1, N]);
     ind=fitnessoffsprings<AllFitness;
     AllFitness(ind)=fitnessoffsprings(ind);
     X(ind,:)=offsprings(ind,:);
