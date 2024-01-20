@@ -96,28 +96,28 @@ function [best_pos,convergence_curve]=muSMA(N,Max_FEs,lb,ub,dim,fobj)
             Destination_fitness = bestFitness;
         end
         
-        a = atanh(-(FEs/Max_FEs)+1);   %Eq.(2.4)
-        b = 1-FEs/Max_FEs;
-        % Update the Position of search agents
-        for i=1:N
-            if rand<z     %Eq.(2.7)
-                X(i,:) = (ub-lb)*rand+lb;
-            else
-                p =tanh(abs(AllFitness(i)-Destination_fitness));  %Eq.(2.2)
-                vb = unifrnd(-a,a,1,dim);  %Eq.(2.3)
-                vc = unifrnd(-b,b,1,dim);
-                for j=1:dim
-                    r = rand();
-                    A = randi([1,N]);  % two positions randomly selected from population
-                    B = randi([1,N]);
-                    if r<p    %Eq.(2.1)
-                        X(i,j) = best_pos(j)+ vb(j)*(weight(i,j)*X(A,j)-X(B,j));
-                    else
-                        X(i,j) = vc(j)*X(i,j);
-                    end
-                end
-            end
-        end
+        % a = atanh(-(FEs/Max_FEs)+1);   %Eq.(2.4)
+        % b = 1-FEs/Max_FEs;
+        % % Update the Position of search agents
+        % for i=1:N
+        %     if rand<z     %Eq.(2.7)
+        %         X(i,:) = (ub-lb)*rand+lb;
+        %     else
+        %         p =tanh(abs(AllFitness(i)-Destination_fitness));  %Eq.(2.2)
+        %         vb = unifrnd(-a,a,1,dim);  %Eq.(2.3)
+        %         vc = unifrnd(-b,b,1,dim);
+        %         for j=1:dim
+        %             r = rand();
+        %             A = randi([1,N]);  % two positions randomly selected from population
+        %             B = randi([1,N]);
+        %             if r<p    %Eq.(2.1)
+        %                 X(i,j) = best_pos(j)+ vb(j)*(weight(i,j)*X(A,j)-X(B,j));
+        %             else
+        %                 X(i,j) = vc(j)*X(i,j);
+        %             end
+        %         end
+        %     end
+        % end
         convergence_curve(it)=Destination_fitness;
         it=it+1;
     end
