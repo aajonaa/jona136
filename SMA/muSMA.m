@@ -1,25 +1,26 @@
-% Slime Mold Algorithm modified by Jona 2024-1-19.
+%% Slime Mold Algorithm modified by Jona 2024-1-19.
 function [best_pos,convergence_curve]=muSMA(N,Max_FEs,lb,ub,dim,fobj)
 tic
 disp('muSMA is now tackling your problem')
 
-% initialize position
-best_pos=zeros(1,dim);
-Destination_fitness=inf;%change this to -inf for maximization problems
-AllFitness = inf*ones(N,1);%record the fitness of all slime mold
+%% initialize position
+best_pos = zeros(1,dim);
+Destination_fitness = inf;
+AllFitness = inf*ones(N,1);
 fitness_Mutant = inf * ones(N, 1);
-weight = zeros(N,dim);%fitness weight of each slime mold
-%Initialize the set of random solutions
+weight = zeros(N,dim);
 X=initialization(N,dim,ub,lb);
 history_X = initialization(N, dim, ub, lb);
 map = ones(N, dim);
-convergence_curve=[];
-it=1;  %Number of iterations
-lb=ones(1,dim).*lb; % lower boundary 
-ub=ones(1,dim).*ub; % upper boundary
-z=0.03; % parameter
+convergence_curve = [];
+it = 1;  
+lb = ones(1,dim).*lb; 
+ub = ones(1,dim).*ub; 
+z = 0.03; 
+C_max = 3;
+C_min = 1;
 
-% Main loop
+%% Main loop
 FEs = 0;
 while  FEs <= Max_FEs
     
@@ -58,9 +59,9 @@ while  FEs <= Max_FEs
 %     end
 %     history_X = history_X(randperm(N), :);
 
-    if rand < rand
-        history_X = X;
-    else
+%     if rand < rand
+%         history_X = X;
+%     else
         for i = 1:N
             if SmellIndex(i) <= N/2
                 history_X(SmellIndex(i), :) = X(SmellIndex(i), :);
@@ -68,9 +69,10 @@ while  FEs <= Max_FEs
                 history_X(SmellIndex(i), :) = (ub-lb)*rand+lb;
             end
         end
-    end
+%     end
     history_X = history_X(randperm(N), :);
-    F = get_scale_factor;
+    F = C_max - rand * (-(sin(pi/(2*FEs)) + C_min));
+    % F = get_scale_factor;
     for i = 1:N/2
         u = randperm(dim);
         map(SmellIndex(i), u(1:ceil(rand * dim))) = 0;
