@@ -72,9 +72,15 @@ function [best_pos,convergence_curve]=muSMA(N,Max_FEs,lb,ub,dim,fobj)
         % F = C_max - rand * (-(sin(pi/(2*FEs)) + C_min));
         F = get_scale_factor;
         for i = 1:N
-            if SmellIndex(i) <= N/2
-                u = randperm(dim);
-                map(i, u(1:ceil(rand * dim))) = 0;
+            if rand < (1-FEs/Max_FEs)
+                if SmellIndex(i) <= N/2
+                    u = randperm(dim);
+                    map(i, u(1:ceil(rand * dim))) = 0;
+                end
+            else
+                if SmellIndex(i) <= N/2
+                    u = randperm(dim);
+                    map(i, randi(dim)) = 0;
             end
         end
         disp(map);
