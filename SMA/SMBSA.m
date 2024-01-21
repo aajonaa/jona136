@@ -73,9 +73,9 @@ function [best_pos,convergence_curve]=SMBSA(N,Max_FEs,lb,ub,dim,fobj)
                             A = randi([1,N]); 
                             B = randi([1,N]);
                             if r<p   
-                                history_X(i, :) = best_pos(j)+ vb(j)*(weight(i,j)*X(A,j)-X(B,j));
+                                history_X(i, j) = best_pos(j)+ vb(j)*(weight(i,j)*X(A,j)-X(B,j));
                             else
-                                history_X(i, :) = vc(j)*X(i,j);
+                                history_X(i, j) = vc(j)*X(i,j);
                             end
                         end
                     end    

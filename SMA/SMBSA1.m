@@ -1,7 +1,7 @@
 %% Slime Mold Algorithm modified by Jona 2024-1-19.
-function [best_pos,convergence_curve]=SMBSA(N,Max_FEs,lb,ub,dim,fobj)
+function [best_pos,convergence_curve]=SMBSA1(N,Max_FEs,lb,ub,dim,fobj)
     tic
-    disp('SMBSA is now tackling your problem')
+    disp('SMBSA1 is now tackling your problem')
     
     %% Initialize position
     best_pos=zeros(1,dim);
