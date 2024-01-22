@@ -16,8 +16,6 @@ function [best_pos,convergence_curve]=SMBSA(N,Max_FEs,lb,ub,dim,fobj)
     FEs = 0;
     lb=ones(1,dim).*lb; 
     ub=ones(1,dim).*ub; 
-    z=1; 
-    X = BoundaryControl(X, lb, ub);
     
     %% Main loop
     while  FEs <= Max_FEs
@@ -35,57 +33,23 @@ function [best_pos,convergence_curve]=SMBSA(N,Max_FEs,lb,ub,dim,fobj)
             
         %% Weight calculate for the Selection-I
         [SmellOrder,SmellIndex] = sort(AllFitness); 
-        worstFitness = SmellOrder(N);
-        bestFitness = SmellOrder(1);
-        S=bestFitness-worstFitness+eps;  % plus eps to avoid denominator zero
-        for i=1:N
-            for j=1:dim
-                if i <= N/2  %Eq.(2.5)
-                    weight(SmellIndex(i),j) = 1+rand()*log10((bestFitness-SmellOrder(i))/(S)+1);
-                else
-                    weight(SmellIndex(i),j) = 1-rand()*log10((bestFitness-SmellOrder(i))/(S)+1);
-                end
-            end
-        end
-    
+        
         %% Mutation
         if rand < rand
             history_X = X;
         else
-            a = atanh(-(FEs/Max_FEs)+1);  
-            b = 1-FEs/Max_FEs;
             for i = 1:N
                 if SmellIndex(i) <= N/2
                     history_X(i, :) = X(i, :);
                 else
-                    if rand<z    
-                        flag = 0;
-                        disp(flag);
-                        history_X(i, :) = (ub-lb)*rand+lb;
-                    else
-                        flag = 1;
-                        disp(flag);
-                        p =tanh(abs(AllFitness(i)-Destination_fitness));  
-                        vb = unifrnd(-a,a,1,dim); 
-                        vc = unifrnd(-b,b,1,dim);
-                        for j=1:dim
-                            r = rand();
-                            A = randi([1,N]); 
-                            B = randi([1,N]);
-                            if r<p   
-                                history_X(i, j) = best_pos(j)+ vb(j)*(weight(i,j)*X(A,j)-X(B,j));
-                            else
-                                history_X(i, j) = vc(j)*X(i,j);
-                            end
-                        end
-                    end    
+                    history_X(i, :) = (ub-lb)*rand+lb;
                 end
             end
         end
         history_X = history_X(randperm(N), :);
-        F = get_scale_factor;
 
         %% Crossover using matrix
+        F = get_scale_factor;
         map = ones(N, dim);
         for i = 1:N
             if SmellIndex(i) <= N/2
