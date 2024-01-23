@@ -59,12 +59,8 @@ function [best_pos,convergence_curve]=SMBSA1(N,Max_FEs,lb,ub,dim,fobj)
                     history_X(i, :) = X(i, :);
                 else
                     if rand<z    
-                        flag = 0;
-                        disp(flag);
                         history_X(i, :) = (ub-lb)*rand+lb;
                     else
-                        flag = 1;
-                        disp(flag);
                         p =tanh(abs(AllFitness(i)-Destination_fitness));  
                         vb = unifrnd(-a,a,1,dim); 
                         vc = unifrnd(-b,b,1,dim);
