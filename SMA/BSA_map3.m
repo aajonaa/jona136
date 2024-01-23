@@ -2,7 +2,7 @@
 % 2024-1-23.
 function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
 
-disp('BSA_map');
+disp('BSA');
 disp(N);
 disp(Max_FEs);
 disp(lb);
@@ -32,46 +32,27 @@ end
 
 while FEs < Max_FEs
 
-    %% Sort the population
-    [~, SmellIndex] = sort(AllFitness);
-    best_pos = X(SmellIndex(1), :);
-
     %SELECTION-I
     if rand<rand, historical_X=X; end  
     historical_X=historical_X(randperm(N),:); 
     F=get_scale_factor; 
-    % map=zeros(N,dim); 
+    map=zeros(N,dim); 
+    for i = 1:N
+        if rand < rand
+            u = randperm(dim);
+            map(i, u(1: ceil(rand * dim))) = 1;
+        else
+            map(i, randi(dim)) = 1;
+        end
+    end
     % if rand<rand
     %     for i=1:N,  u=randperm(dim); map(i,u(1:ceil(DIM_RATE*rand*dim)))=1; end
     % else
     %     for i=1:N,  map(i,randi(dim))=1; end
     % end
 
-    map = ones(N, dim);
-    for i = 1:N
-        if SmellIndex(i) <= N
-            if rand < 1 - FEs/Max_FEs
-                u = randperm(dim);
-                map(i, u(1:ceil(rand * dim))) = 0;
-                Mutant(i, :) = X(i, :) + F * map(i, :) .* (historical_X(i, :) - X(i, :));
-            else
-                map(i, randi(dim)) = 0;
-                Mutant(i, :) = X(i, :) + F * map(i, :) .* (historical_X(i, :) - X(i, :));
-            end
-        else
-            a = tanh(1-FEs/Max_FEs);
-            vb = unifrnd(-a, a, 1, dim);
-            for j = 1:dim
-                Mutant(i, j) = best_pos(j) + vb(j) * (historical_X(i, j) - X(i, j));
-            end
-            % Mutant(i, :) = lb + rand * (ub - lb);
-        end
-    end
-
     % RECOMBINATION (MUTATION+CROSSOVER)   
-    % offsprings=X + F * map .* (historical_X - X);   
-    offsprings = Mutant;
-    
+    offsprings=X + F * map .* (historical_X - X);   
     offsprings=BoundaryControl(offsprings,lb,ub); 
 
     % SELECTON-II
