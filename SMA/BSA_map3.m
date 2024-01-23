@@ -2,13 +2,13 @@
 % 2024-1-23.
 function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
 
-disp('BSA');
-disp(N);
-disp(Max_FEs);
-disp(lb);
-disp(ub);
-disp(dim);
-disp(fobj);
+% disp('BSA');
+% disp(N);
+% disp(Max_FEs);
+% disp(lb);
+% disp(ub);
+% disp(dim);
+% disp(fobj);
 
 tic
 
@@ -37,11 +37,14 @@ while FEs < Max_FEs
     historical_X=historical_X(randperm(N),:); 
     F=get_scale_factor; 
     map=zeros(N,dim); 
-    for i = 1:N
-        if rand < rand
+
+    if rand < 1 - FEs/Max_FEs
+        for i = 1:N
             u = randperm(dim);
             map(i, u(1: ceil(rand * dim))) = 1;
-        else
+        end
+    else
+        for i = 1:N
             map(i, randi(dim)) = 1;
         end
     end

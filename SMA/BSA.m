@@ -2,13 +2,13 @@
 % 2024-1-23.
 function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
 
-disp('BSA');
-disp(N);
-disp(Max_FEs);
-disp(lb);
-disp(ub);
-disp(dim);
-disp(fobj);
+% disp('BSA');
+% disp(N);
+% disp(Max_FEs);
+% disp(lb);
+% disp(ub);
+% disp(dim);
+% disp(fobj);
 
 tic
 
