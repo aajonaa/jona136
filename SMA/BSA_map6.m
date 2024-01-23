@@ -28,6 +28,7 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
     historical_X = initialization(N, dim, ub, lb);
     iter = 1;
     count = 0;
+    a = 0.1;
     for i = 1 : N
         AllFitness(i) = fobj(X(i, :));
         FEs  = FEs +1;
@@ -38,7 +39,7 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
         [~, SmellIndex] = sort(AllFitness);
         bestFitness = SmellIndex(1);
         if bestFitness < pre_bestFitness
-            count = count / 2;
+            count = sqrt(count);
         else
             count = count + 1;
         end
@@ -59,14 +60,15 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
                     map(i, u(1: ceil(rand * dim))) = 1;
                     Mutant(i, :) = X(i, :) + F * map(i, :) .* (historical_X(i, :) - X(i, :));
                 else
-                    p = tanh(abs(AllFitness(i) - bestFitness));
-                    if rand < p
+                    % p = tanh(abs(AllFitness(i) - bestFitness));
+                    if count < 50
                         a = tanh(1-FEs/Max_FEs);
                         vb = unifrnd(-a, a, 1, dim);
                         for j = 1:dim
                             Mutant(i, j) = best_pos(j) + vb(j) * (historical_X(i, j) - X(i, j));
                         end
                     else
+                        'mutation'
                         Mutant(i, :) = lb + rand * (ub - lb);
                     end
                 end
