@@ -1,5 +1,6 @@
  % Backtracking Search Optimization Algorithm (BSA) modified by Jona
 % 2024-1-23.
+% Combine the map4 and map5
 function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
 
     % disp('BSA');
@@ -17,6 +18,7 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
     Convergence_curve = [];
     FEs = 0;
     bestFitness = inf;
+    pre_bestFitness = inf;
     best_pos = zeros(1,dim);
     
     AllFitness = inf * ones(1, N);
@@ -25,6 +27,7 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
     X=initialization(N,dim,ub,lb); 
     historical_X = initialization(N, dim, ub, lb);
     iter = 1;
+    count = 0;
     for i = 1 : N
         AllFitness(i) = fobj(X(i, :));
         FEs  = FEs +1;
@@ -33,6 +36,14 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
     while FEs < Max_FEs
 
         [~, SmellIndex] = sort(AllFitness);
+        bestFitness = SmellIndex(1);
+        if bestFitness < pre_bestFitness
+            count = count / 2;
+        else
+            count = count + 1;
+        end
+        count
+        pre_bestFitness = bestFitness;
         best_pos = X(SmellIndex(1), :);
     
         %SELECTION-I
@@ -48,12 +59,16 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
                     map(i, u(1: ceil(rand * dim))) = 1;
                     Mutant(i, :) = X(i, :) + F * map(i, :) .* (historical_X(i, :) - X(i, :));
                 else
-                    % a = tanh(1-FEs/Max_FEs);
-                    % vb = unifrnd(-a, a, 1, dim);
-                    % for j = 1:dim
-                    %     Mutant(i, j) = best_pos(j) + vb(j) * (historical_X(i, j) - X(i, j));
-                    % end
-                    Mutant(i, :) = lb + rand * (ub - lb);
+                    p = tanh(abs(AllFitness(i) - bestFitness));
+                    if rand < p
+                        a = tanh(1-FEs/Max_FEs);
+                        vb = unifrnd(-a, a, 1, dim);
+                        for j = 1:dim
+                            Mutant(i, j) = best_pos(j) + vb(j) * (historical_X(i, j) - X(i, j));
+                        end
+                    else
+                        Mutant(i, :) = lb + rand * (ub - lb);
+                    end
                 end
             end
         else
@@ -83,9 +98,9 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
         X(ind,:)=offsprings(ind,:);
         [minimum_fitness, ind]=min(AllFitness);    
         best_pos=X(ind,:);
-        bestFitness = minimum_fitness;
+        Destination_fitness = minimum_fitness;
     
-        Convergence_curve(iter)=bestFitness;
+        Convergence_curve(iter) = Destination_fitness;
         iter =iter + 1;
     end
     toc

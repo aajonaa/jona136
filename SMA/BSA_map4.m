@@ -43,7 +43,7 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
     
         if rand < 1 - FEs/Max_FEs
             for i = 1:N
-                if SmellIndex(i) <= N - N/4;
+                if SmellIndex(i) <= N - N/4
                     u = randperm(dim);
                     map(i, u(1: ceil(rand * dim))) = 1;
                     Mutant(i, :) = X(i, :) + F * map(i, :) .* (historical_X(i, :) - X(i, :));
