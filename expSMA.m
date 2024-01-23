@@ -26,7 +26,7 @@ MaxFEs=300000;
 % algorithmName = {'WGWO', 'W2GWO', 'W3GWO', 'GWO'};
 % algorithmName = {'W3GWO_4', 'W3GWO_8', 'W3GWO_6', 'W3GWO_2'};
 % algorithmName = {'SMBSA1', 'SMBSA', 'BSA', 'SMA'};
-algorithmName = {'BSA_map', 'BSA'}
+algorithmName = {'BSA_map2', 'BSA'}
 
 
 % Flod=10;
