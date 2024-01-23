@@ -26,7 +26,7 @@ MaxFEs=300000;
 % algorithmName = {'WGWO', 'W2GWO', 'W3GWO', 'GWO'};
 % algorithmName = {'W3GWO_4', 'W3GWO_8', 'W3GWO_6', 'W3GWO_2'};
 % algorithmName = {'SMBSA1', 'SMBSA', 'BSA', 'SMA'};
-algorithmName = {'BSA', 'SMA'}
+algorithmName = {'BSA', 'SMA', 'SMBSA'}
 
 
 % Flod=10;
@@ -84,7 +84,7 @@ Markers          = repmat(basic_Markers,ceil(nLines/numel(basic_Markers)),1);
 Function_name_all = {'F129', 'F130', 'F131', 'F132', 'F133', 'F134', 'F135'}
 
 % CEC17_func
-Function_name_all={'F107','F108', 'F109','F110','F111','F112','F113','F114','F115','F116','F117','F118','F119','F120','F121','F122','F123','F124','F125','F126', 'F127', 'F128', 'F129','F130','F131','F132','F133','F134','F135','F136'};
+% Function_name_all={'F107','F108', 'F109','F110','F111','F112','F113','F114','F115','F116','F117','F118','F119','F120','F121','F122','F123','F124','F125','F126', 'F127', 'F128', 'F129','F130','F131','F132','F133','F134','F135','F136'};
 % From F1 to F20
 % Function_name_all={'F107','F108','F109','F110','F111','F112','F113','F114','F115','F116','F117','F118','F119','F120','F121','F122','F123','F124','F125','F126'};
 % Function_name_all={'F111','F112','F113','F114','F115'};

@@ -57,7 +57,18 @@ function [best_pos,convergence_curve]=SMBSA(N,Max_FEs,lb,ub,dim,fobj)
                 map(i, u(1:ceil(rand * dim))) = 0;
             end
         end
-        Mutant = X + map * F .* (history_X - X);
+        p = tanh(abs(AllFitness(i) - Destination_fitness));
+        if rand < p
+            Mutant = X + F * map .* (history_X - X);  
+        else
+            b = 1 - FEs/Max_FEs;
+            vc = (-b, b, 1, dim);
+            for i = 1:N
+                for j = 1:dim
+                    Mutant(i, j) = vc(j) * Mutant(i, j);
+                end
+            end
+        end  
         Mutant = BoundaryControl(Mutant, lb, ub);
         for i = 1:N
             fitness_Mutant(i) = fobj(Mutant(i, :));
