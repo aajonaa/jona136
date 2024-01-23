@@ -18,29 +18,25 @@ Convergence_curve = [];
 FEs = 0;
 bestFitness = inf;
 best_pos = zeros(1,dim);
-iter = 1;
+
 AllFitness = inf * ones(1, N);
 fitnessoffsprings = inf * ones(1, N);
 if numel(lb)==1, lb=lb*ones(1,dim); ub=ub*ones(1,dim); end
-X=initialization(N,dim,ub,lb); % see Eq.1 in [1]
+X=initialization(N,dim,ub,lb); 
+historical_X = initialization(N, dim, ub, lb);
+iter = 1;
 for i = 1 : N
     AllFitness(i) = fobj(X(i, :));
     FEs  = FEs +1;
-    if AllFitness(i) < bestFitness
-        bestFitness = AllFitness(i);
-        best_pos = X(i,:);
-    end
 end
-% historical_X  is swarm-memory of BSA as mentioned in [1].
-historical_X = initialization(N, dim, ub, lb);% see Eq.2 in [1]
 
 while FEs < Max_FEs
 
     %SELECTION-I
-    if rand<rand, historical_X=X; end  % see Eq.3 in [1] redefine oldP at the beginning of each iteration
-    historical_X=historical_X(randperm(N),:); % see Eq.4 in [1] randomly change the order of the individuals in oldP
-    F=get_scale_factor; % see Eq.5 in [1], you can define other F generation strategies 
-    map=zeros(N,dim); % see Algorithm-2 in [1]  
+    if rand<rand, historical_X=X; end  
+    historical_X=historical_X(randperm(N),:); 
+    F=get_scale_factor; 
+    map=zeros(N,dim); 
     if rand<rand
         for i=1:N,  u=randperm(dim); map(i,u(1:ceil(DIM_RATE*rand*dim)))=1; end
     else
@@ -48,18 +44,13 @@ while FEs < Max_FEs
     end
 
     % RECOMBINATION (MUTATION+CROSSOVER)   
-    % disp(map);
-    offsprings=X+(map.*F).*(historical_X-X);   % see Eq.5 in [1]  
-    offsprings=BoundaryControl(offsprings,lb,ub); % see Algorithm-3 in [1]
+    offsprings=X + F * map .* (historical_X - X);   
+    offsprings=BoundaryControl(offsprings,lb,ub); 
 
     % SELECTON-II
     for i = 1:N
         fitnessoffsprings(i) = fobj(offsprings(i,:));
         FEs = FEs + 1;
-        if fitnessoffsprings(i) < bestFitness
-            bestFitness = fitnessoffsprings(i);
-            best_pos = offsprings(i,:);
-        end
     end
     ind=fitnessoffsprings<AllFitness;
     AllFitness(ind)=fitnessoffsprings(ind);
@@ -78,7 +69,7 @@ function X=BoundaryControl(X,low,up)
 [N,dim]=size(X);
 for i=1:N
     for j=1:dim                
-        k=rand<rand; % you can change boundary-control strategy
+        k=rand<rand; 
         if X(i,j)<low(j)
             if k, X(i,j)=low(j); 
             else X(i,j)=rand*(up(j)-low(j))+low(j); 

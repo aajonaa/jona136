@@ -16,6 +16,7 @@ function [best_pos,convergence_curve]=SMBSA(N,Max_FEs,lb,ub,dim,fobj)
     FEs = 0;
     lb=ones(1,dim).*lb; 
     ub=ones(1,dim).*ub; 
+    Mutant = zeros(N, dim);
     
     %% Main loop
     while  FEs <= Max_FEs
