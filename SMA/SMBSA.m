@@ -62,7 +62,7 @@ function [best_pos,convergence_curve]=SMBSA(N,Max_FEs,lb,ub,dim,fobj)
             Mutant = X + F * map .* (history_X - X);  
         else
             b = 1 - FEs/Max_FEs;
-            vc = (-b, b, 1, dim);
+            vc = unifrnd(-b, b, 1, dim);
             for i = 1:N
                 for j = 1:dim
                     Mutant(i, j) = vc(j) * Mutant(i, j);
