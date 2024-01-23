@@ -48,11 +48,12 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
                     map(i, u(1: ceil(rand * dim))) = 1;
                     Mutant(i, :) = X(i, :) + F * map(i, :) .* (historical_X(i, :) - X(i, :));
                 else
-                    a = tanh(1-FEs/Max_FEs);
-                    vb = unifrnd(-a, a, 1, dim);
-                    for j = 1:dim
-                        Mutant(i, j) = best_pos(j) + vb(j) * (historical_X(i, j) - X(i, j));
-                    end
+                    % a = tanh(1-FEs/Max_FEs);
+                    % vb = unifrnd(-a, a, 1, dim);
+                    % for j = 1:dim
+                    %     Mutant(i, j) = best_pos(j) + vb(j) * (historical_X(i, j) - X(i, j));
+                    % end
+                    Mutant(i, :) = lb + rand * (ub - lb);
                 end
             end
         else
