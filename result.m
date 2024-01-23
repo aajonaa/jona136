@@ -1,6 +1,6 @@
 %% show result Sheet
 % Specify the file path and sheet name
-filePath = 'exp_result/BSA-01-23_10_59/BSA.xlsx'
+filePath = 'exp_result/BSA_map2-01-23_18_16/BSA_map2.xlsx'
 sheetName = 'result';  % Replace with the desired sheet name
 
 % Read the table from the Excel file

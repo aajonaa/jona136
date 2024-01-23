@@ -52,10 +52,10 @@ while FEs < Max_FEs
             if rand < 1 - FEs/Max_FEs
                 u = randperm(dim);
                 map(i, u(1:ceil(rand * dim))) = 0;
-                Mutant(i, :) = X(i, :) + F * map(i, :) * (history_X(i, :) - X);
+                Mutant(i, :) = X(i, :) + F * map(i, :) .* (historical_X(i, :) - X(i, :));
             else
                 map(i, randi(dim)) = 0;
-                Mutant(i, :) = X(i, :) + F * map(i, :) * (history_X(i, :) - X);
+                Mutant(i, :) = X(i, :) + F * map(i, :) .* (historical_X(i, :) - X(i, :));
             end
         else
             a = tanh(1-FEs/Max_FEs);
