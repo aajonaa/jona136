@@ -63,7 +63,7 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
         % if rand < 1 - FEs/Max_FEs
             p = 1/(1+exp(-c * (count - d)));
             p = 1.3 * p - 0.3;
-            if rand > p
+            if p > 0.5
                 flag = 0;
                 % for i = 1:N
                 %     u = randperm(dim);
@@ -73,12 +73,12 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
                 b = 1 - FEs/Max_FEs;
                 vc = unifrnd(-b, b, 1, N);
                 for i = 1:N
-                    if rand > FEs/Max_FEs
+                    if rand > (FEs/Max_FEs)^3
                         vc(i) = 1;
                     end
                 end
                 for i = 1:N
-                    if SmellIndex(i) <= N
+                    if SmellIndex(i) > 1
 
                         u = randperm(dim);
                         map(i, u(1: ceil(rand * dim))) = 1;
@@ -111,6 +111,7 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
                         % %     b = 1 - FEs/Max_FEs;
                         % %     vc = unifrnd(-b, b, 1, dim);
                         % % %     % Mutant(i, :) = lb + rand * (ub - lb);
+                            % Mutant(i, :) = best_pos + F * (historical_X(i, :) - X(i, :)); %% F1-F4
                             Mutant(i, :) = best_pos + F * (historical_X(i, :) - X(i, :)); %% F1-F4
                         % %     for j = 1:dim
                         % %         Mutant(i, j) = vc(j) * best_pos(j);
