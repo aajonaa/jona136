@@ -26,6 +26,7 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
     if numel(lb)==1, lb=lb*ones(1,dim); ub=ub*ones(1,dim); end
     X=initialization(N,dim,ub,lb); 
     historical_X = initialization(N, dim, ub, lb);
+    weight = ones(N, dim);
     iter = 1;
     count = 0;
     a = 0.1;
@@ -34,6 +35,7 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
         FEs  = FEs +1;
     end
     
+    %% Main loop
     while FEs < Max_FEs
 
         [~, SmellIndex] = sort(AllFitness);
@@ -46,8 +48,21 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
         count
         pre_bestFitness = bestFitness;
         best_pos = X(SmellIndex(1), :);
+        worstFitness = SmellIndex(N);
+        S = bestFitness - worstFitness + eps;
+        for i = 1:N
+            if SmellIndex(i) <= N/2
+                for j = 1:dim
+                    weight(i, j) = 1 + rand() * log10((bestFitness - AllFitness(i))/S + 1);
+                end
+            else
+                for j = 1:dim
+                    weight(i, j) = 1 - rand() * log10((bestFitness - AllFitness(i))/S + 1);
+                end
+            end
+        end
     
-        %SELECTION-I
+        %% SELECTION-I
         if rand<rand, historical_X=X; end  
         historical_X=historical_X(randperm(N),:); 
         F=get_scale_factor; 
@@ -58,21 +73,30 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
                 if SmellIndex(i) <= N - N/4
                     u = randperm(dim);
                     map(i, u(1: ceil(rand * dim))) = 1;
+                    avgWeight = mean(X(i, :));
                     Mutant(i, :) = X(i, :) + F * map(i, :) .* (historical_X(i, :) - X(i, :));
                 else
                     if count < 10
                         a = tanh(1-FEs/Max_FEs);
-                        vb = unifrnd(-a, a, 1, dim);
-                        for j = 1:dim
-                            Mutant(i, j) = best_pos(j) + vb(j) * (historical_X(i, j) - X(i, j));
-                        end
+                        % vb = unifrnd(-a, a, 1, dim);
+                        % for j = 1:dim
+                        %     Mutant(i, j) = best_pos(j) + vb(j) * (historical_X(i, j) - X(i, j));
+                        vb = unifrnd(-a, a, 1, 1);
+                        Mutant(i, :) = best_pos + vb * (historical_X(i, :) - X(i, :));
                     else
                         'mutation'
-                        Mutant(i, :) = lb + rand * (ub - lb);
+                        b = 1 - FEs/Max_FEs;
+                        vc = unifrnd(-b, b, 1, dim);
+                        % Mutant(i, :) = lb + rand * (ub - lb);
+                        % Mutant(i, :) = best_pos + F * (historical_X(i, :) - X(i, :)); %% F1-F4
+                        for j = 1:dim
+                            Mutant(i, :) = vc(j) * best_pos;
+                        end
                     end
                 end
             end
         else
+            'single'
             for i = 1:N
                 map(i, randi(dim)) = 1;
                 Mutant(i, :) = X(i, :) + F * map(i, :) .* (historical_X(i, :) - X(i, :));
@@ -84,12 +108,12 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
         %     for i=1:N,  map(i,randi(dim))=1; end
         % end
     
-        % RECOMBINATION (MUTATION+CROSSOVER)   
+        %% RECOMBINATION (MUTATION+CROSSOVER)   
         % offsprings=X + F * map .* (historical_X - X);   
         offsprings = Mutant;
         offsprings=BoundaryControl(offsprings,lb,ub); 
     
-        % SELECTON-II
+        %% SELECTON-II
         for i = 1:N
             fitnessoffsprings(i) = fobj(offsprings(i,:));
             FEs = FEs + 1;
