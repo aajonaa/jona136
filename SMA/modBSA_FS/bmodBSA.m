@@ -30,7 +30,7 @@ function [bestFitness, best_pos, Convergence_curve, Time] = bmodBSA(N, Max_FEs, 
     % historical_X = initialization(N, dim, ub, lb);    
     historical_X = initialization(N, dim, ub, lb) > 0.5;
 
-    if numel(lb)==1, lb=lb*ones(1,dim); ub=ub*ones(1,dim); end
+    % if numel(lb)==1, lb=lb*ones(1,dim); ub=ub*ones(1,dim); end
 
     weight = ones(N, dim);
 
@@ -43,6 +43,7 @@ function [bestFitness, best_pos, Convergence_curve, Time] = bmodBSA(N, Max_FEs, 
     count = 0;
     c = 0.02;
     d = 50;
+    z = 0.2;
     flag = 1;
 
     for i = 1 : N
@@ -59,7 +60,7 @@ function [bestFitness, best_pos, Convergence_curve, Time] = bmodBSA(N, Max_FEs, 
         [SmellOrder, SmellIndex] = sort(AllFitness);
         bestFitness = SmellOrder(1);
         if bestFitness < pre_bestFitness
-            count = sqrt(count);
+            count = count / 2;
         else
             count = count + 1;
         end
@@ -75,7 +76,7 @@ function [bestFitness, best_pos, Convergence_curve, Time] = bmodBSA(N, Max_FEs, 
         map=zeros(N,dim); 
         p = 1/(1+exp(-c * (count - d)));
         p = 1.3 * p - 0.3;
-        if p > 0.5
+        if p > z
             flag = 0;
             b = 1 - FEs/Max_FEs;
             vc = unifrnd(-b, b, 1, N);

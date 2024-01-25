@@ -25,19 +25,21 @@ function [best_pos,Convergence_curve] = modBSA(N, Max_FEs, lb, ub, dim, fobj)
     % lb = 0;
     % ub = 1;
 
+    if numel(lb)==1, lb=lb*ones(1,dim); ub=ub*ones(1,dim); end
+
     % III
     X=initialization(N,dim,ub,lb); 
     % X=initialization(N,dim,ub,lb) > 0.5;
     historical_X = initialization(N, dim, ub, lb);    
     % historical_X = initialization(N, dim, ub, lb) > 0.5;
 
-    if numel(lb)==1, lb=lb*ones(1,dim); ub=ub*ones(1,dim); end
+
 
     weight = ones(N, dim);
 
     % II
-    FEs = 0;
     iter = 1;
+    FEs = 0;
     Convergence_curve = [];
 
     %% parameter
@@ -60,7 +62,6 @@ function [best_pos,Convergence_curve] = modBSA(N, Max_FEs, lb, ub, dim, fobj)
         %% Calculate count and sort the fitness
         [SmellOrder, SmellIndex] = sort(AllFitness);
         bestFitness = SmellOrder(1);
-
         if bestFitness < pre_bestFitness
             count = count / 2;
         else

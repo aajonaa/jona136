@@ -4,7 +4,6 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
     tic
     
     %INITIALIZATION
-
     bestFitness = inf;
     pre_bestFitness = inf;
     best_pos = zeros(1,dim);
