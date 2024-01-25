@@ -78,10 +78,12 @@ function [bestFitness, best_pos, Convergence_curve, Time] = bmodBSA(N, Max_FEs, 
         p = 1.3 * p - 0.3;
         if p > z
             flag = 0;
-            b = 1 - FEs/Max_FEs;
+            % b = 1 - FEs/Max_FEs;
+            b = 1 - iter/Max_FEs
             vc = unifrnd(-b, b, 1, N);
             for i = 1:N
-                if rand > (FEs/Max_FEs)^3
+                % if rand > (FEs/Max_FEs)^3
+                if rand > (iter/Max_FEs)^3
                     vc(i) = 1;
                 end
             end
