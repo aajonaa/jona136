@@ -21,6 +21,7 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
     count = 0;
     c = 0.02;
     d = 50;
+    z = 0.2;
     flag = 1;
 
     for i = 1 : N
@@ -35,7 +36,7 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
         [SmellOrder, SmellIndex] = sort(AllFitness);
         bestFitness = SmellOrder(1);
         if bestFitness < pre_bestFitness
-            count = sqrt(count);
+            count = count / 2;
         else
             count = count + 1;
         end
@@ -51,7 +52,7 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
         map=zeros(N,dim); 
         p = 1/(1+exp(-c * (count - d)));
         p = 1.3 * p - 0.3;
-        if p > 0.5
+        if p > z
             flag = 0;
             b = 1 - FEs/Max_FEs;
             vc = unifrnd(-b, b, 1, N);
