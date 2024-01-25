@@ -4,8 +4,7 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
     tic
     
     %INITIALIZATION
-    Convergence_curve = [];
-    FEs = 0;
+
     bestFitness = inf;
     pre_bestFitness = inf;
     best_pos = zeros(1,dim);
@@ -16,6 +15,8 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
     historical_X = initialization(N, dim, ub, lb);
     weight = ones(N, dim);
     iter = 1;
+    FEs = 0;
+    Convergence_curve = [];
 
     %% parameter
     count = 0;
