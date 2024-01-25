@@ -65,7 +65,6 @@ function [bestFitness, best_pos, Convergence_curve, Time] = bmodBSA(N, Max_FEs, 
         end
         pre_bestFitness = bestFitness;
         best_pos = X(SmellIndex(1), :);
-        worstFitness = SmellIndex(N);
     
         %% SELECTION-I
         if flag == 0, historical_X = X; end
