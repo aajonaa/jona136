@@ -83,11 +83,11 @@ Markers          = repmat(basic_Markers,ceil(nLines/numel(basic_Markers)),1);
 % 'CEC17_func'
 % Function_name_all={'F107','F108', 'F109','F110','F111','F112','F113','F114','F115','F116','F117','F118','F119','F120','F121','F122','F123','F124','F125','F126', 'F127', 'F128', 'F129','F130','F131','F132','F133','F134','F135','F136'};
 
-'CEC17_fun F5-F11'
-Function_name_all = {'F111','F112','F113','F114','F115','F116','F117'}
+% 'CEC17_fun F5-F11'
+% Function_name_all = {'F111','F112','F113','F114','F115','F116','F117'}
 
-% 'CEC17_func F1-F4'
-% Function_name_all = {'F107', 'F108', 'F109', 'F110'}
+'CEC17_func F1-F4'
+Function_name_all = {'F107', 'F108', 'F109', 'F110'}
 
 % 'CEC17_func F1-F11'
 % Function_name_all = {'F107','F108', 'F109','F110','F111','F112','F113','F114','F115','F116','F117'}
