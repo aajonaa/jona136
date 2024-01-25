@@ -32,8 +32,8 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
     while FEs < Max_FEs
 
         %% Calculate count and sort the fitness
-        [~, SmellIndex] = sort(AllFitness);
-        bestFitness = SmellIndex(1);
+        [SmellOrder, SmellIndex] = sort(AllFitness);
+        bestFitness = SmellOrder(1);
         if bestFitness < pre_bestFitness
             count = sqrt(count);
         else
