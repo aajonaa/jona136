@@ -12,7 +12,6 @@ function [best_pos,Convergence_curve] = BSA(N, Max_FEs, lb, ub, dim, fobj)
     if numel(lb)==1, lb=lb*ones(1,dim); ub=ub*ones(1,dim); end
     X=initialization(N,dim,ub,lb); 
     historical_X = initialization(N, dim, ub, lb);
-    weight = ones(N, dim);
     iter = 1;
     FEs = 0;
     Convergence_curve = [];
