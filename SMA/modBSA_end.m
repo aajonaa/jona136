@@ -67,7 +67,7 @@ function [best_pos,Convergence_curve] = modBSA(N, Max_FEs, lb, ub, dim, fobj)
         else
             count = count + 1;
         end
-        count
+        % count
         pre_bestFitness = bestFitness;
         best_pos = X(SmellIndex(1), :);
     
